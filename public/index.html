@@ -104,40 +104,17 @@ function handleSubmit(event) {
     
     const form = document.getElementById('conforpky');
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
+    const data = Object.fromEntries(formData);1
     data.recipients = data.recipients.split('\n').map(email => email.trim()).filter(email => email);
     
-    
-    fetch("/.netlify/functions/submit", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
+    fetch('/.netlify/functions/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     })
-    .then(async response => {
-        if (response.ok) {
-            console.log('Sces');
-            sendButton.textContent = "Error Connecting";
-            sendButton.classList.add("error-button");
-            form.reset();
-        } else {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Ntwkrspsntok');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        sendButton.textContent = "Error Connecting";
-        sendButton.classList.add("error-button");
-    })
-    .finally(() => {
-        setTimeout(() => {
-            sendButton.textContent = "Submit";
-            sendButton.classList.remove("error-button");
-            sendButton.disabled = false;
-        }, 2000);
-    });
+    .then(response => response.json())
+    .then(result => console.log(result))
+    .catch(error => console.error('Error:', error));
 }
     </script>
 

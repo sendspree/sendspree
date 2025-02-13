@@ -29,8 +29,8 @@ try {
     port: 465,
     secure: true,
     auth: {
-      user: 'mygmail@gmail.com', 
-      pass: 'dpasswordsdsdda' 
+      user: 'willyscotmegan@gmail.com', 
+      pass: 'dvhpjxrxrxwxsxcg' 
     }
   });
 
