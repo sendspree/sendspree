@@ -118,8 +118,6 @@
     .then(async response => {
         if (response.ok) {
             console.log('Sces');
-            sendButton.textContent = "Error Connecting";
-            sendButton.classList.add("error-button");
             form.reset();
         } else {
             const errorText = await response.text();
