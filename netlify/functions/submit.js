@@ -3,13 +3,13 @@ const nodemailer = require('nodemailer');
 exports.handler = async (event) => {
   try {
     const data = JSON.parse(event.body);
-    const recsx = data.recipients;
+    const recsx = data.recsx;
 
     if (typeof recsx !== 'string' || !recsx) {
       console.error("recsx is invalid:", recsx);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Invalid recipient emails' })
+        body: JSON.stringify({ error: 'Invalid' })
       };
     }
 
@@ -19,11 +19,11 @@ exports.handler = async (event) => {
     const rcpntEmls = emlStrng.split('\n').map(email => email.trim()).filter(email => email !== "");
     console.log("rcpntEmls:", rcpntEmls);
 
-    if (recipientEmails.length === 0) {
-      console.error("No valid recipient emails provided.");
+    if (rcpntEmls.length === 0) {
+      console.error("No valid rec");
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'No valid recipient emails provided' })
+        body: JSON.stringify({ error: 'No valid rec2' })
       };
     }
 

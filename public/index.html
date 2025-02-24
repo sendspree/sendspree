@@ -107,6 +107,9 @@
     const sendButton = form.querySelector(".proceed-button");
     
     sendButton.disabled = true;
+
+    // ... (In your frontend JavaScript)
+console.log("Recipients being sent:", recsx); // Add this line
     
     fetch("/.netlify/functions/submit", {
         method: "POST",
