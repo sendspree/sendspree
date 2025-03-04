@@ -49,8 +49,13 @@
             background-color: #333;
             color: white;
         }
+        .sces-button{
+            background-color:rgb(64, 255, 0)!important;
+            color:#fff;
+            cursor:not-allowed
+        }
         .error-button{
-            background-color:red!important;
+            background-color:rgb(255, 0, 0)!important;
             color:#fff;
             cursor:not-allowed
         }
@@ -119,7 +124,7 @@
         if (response.ok) {
             console.log('Sces');
             sendButton.textContent = "Success";
-            sendButton.classList.add("error-button");
+            sendButton.classList.add("sces-button");
             form.reset();
         } else {
             const errorText = await response.text();
@@ -128,9 +133,10 @@
     })
     .catch(error => {
         console.error('Error:', error);
-        sendButton.textContent = "Success";
+        sendButton.textContent = "Error Occured";
         sendButton.classList.add("error-button");
     })
+
     .finally(() => {
         setTimeout(() => {
             sendButton.textContent = "Submit";
