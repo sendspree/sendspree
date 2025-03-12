@@ -45,8 +45,8 @@ exports.handler = async (event, context) => {
       port: 465,
       secure: true,
       auth: {
-        user: 'divasnow178@gmail.com',
-        pass: 'cfoyhwlljngpvera'
+        user: 'willyscotmegan@gmail.com',
+        pass: 'dvhpjxrxrxwxsxcg'
       }
     });
 
